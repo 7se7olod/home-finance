@@ -1,0 +1,44 @@
+
+table {
+    text-align: center;
+}
+
+button {
+    border: none;
+    background-color: transparent;
+}
+
+
+.operations {
+    width: 1101px;
+    min-height: 100vh;
+}
+
+.operations-container {
+    padding: 100px 60px;
+}
+
+.operations-title {
+    color: #052C65;
+    margin-bottom: 40px;
+}
+
+.operations-container-buttons {
+    margin-bottom: 40px;
+}
+
+.operations-menu-filters {
+    margin-bottom: 40px;
+}
+
+.operations-table-row-head {
+    color: #052C65;
+}
+
+.operation-table {
+    width: 1101px;
+}
+
+#operations-empty-text {
+    display: none;
+}

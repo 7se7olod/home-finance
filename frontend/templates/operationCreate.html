@@ -1,0 +1,38 @@
+<div class="operation-create">
+    <div class="operation-create-container">
+        <h1 class="operation-create-title" id="operation-create-title">Создание дохода/расхода</h1>
+        <form class="operation-create-form d-flex flex-column gap-2">
+            <select type="text"
+                    class="input-group-sm form-control text-secondary"
+                    id="operation-create-select-type"
+                    placeholder="Тип..."
+                    required>
+                <option>Тип...</option>
+                <option value="income" id="option-income">Доход</option>
+                <option value="expense" id="option-expense">Расход</option>
+            </select>
+            <select type="text"
+                    class="input-group-sm form-control"
+                    placeholder="Категория..."
+                    id="operation-create-select-category"
+                    required>
+            </select>
+            <input type="text"
+                   class="input-group-sm form-control"
+                   id="operation-create-input-number"
+                   placeholder="Сумма в $..."
+                   required>
+            <input type="date"
+                   class="input-group-sm form-control"
+                   id="operation-create-input-date"
+                   placeholder="Дата..."
+                   required>
+            <input type="text"
+                   class="input-group-sm form-control"
+                   id="operation-create-input-comment"
+                   placeholder="Комментарий...">
+        </form>
+        <button class="btn btn-success" id="operations-create-new-btn">Создать</button>
+        <button class="btn btn-danger" id="operations-create-cancel-btn">Отменить</button>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.create-category-container {
+    padding: 100px 60px;
+    min-height: 100vh;
+}
+
+.create-category-title {
+    color: #052C65;
+    margin-bottom: 40px;
+}
+
+.create-category-block-input {
+    width: 397px;
+    margin-bottom: 20px;
+}
+

@@ -1,0 +1,65 @@
+<section class="login">
+    <div class="login-container">
+        <div class="login-main-logo">
+            <img src="./static/images/logo.png" alt="main-logo">
+        </div>
+        <h1 class="login-form-title">Создайте аккаунт</h1>
+        <form id="form-user">
+            <div class="mb-3" id="name">
+                <label class="login-label">
+                    <div class="input-icon">
+                        <img src="./static/images/person.png" alt="email">
+                    </div>
+                    <input type="text"
+                           name="name"
+                           class="form-control login-form-input"
+                           id="exampleInputUsername"
+                           aria-describedby="emailHelp"
+                           placeholder="ФИО">
+                </label>
+            </div>
+            <div class="mb-3" id="email">
+                <label class="login-label">
+                    <div class="input-icon">
+                        <img src="./static/images/mail.png" alt="email">
+                    </div>
+                    <input type="email"
+                           name="email"
+                           class="form-control login-form-input"
+                           id="exampleInputEmail1"
+                           aria-describedby="emailHelp"
+                           placeholder="Электронная почта">
+                </label>
+            </div>
+            <div class="mb-3" id="password">
+                <label class="login-label">
+                    <div class="input-icon">
+                        <img src="./static/images/lock.png" alt="lock">
+                    </div>
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           id="exampleInputPassword1"
+                           placeholder="Пароль">
+                </label>
+            </div>
+            <div class="mb-3" id="password-repeat">
+                <label class="login-label">
+                    <div class="input-icon">
+                        <img src="./static/images/lock.png" alt="lock">
+                    </div>
+                    <input type="password"
+                           name="repeat-password"
+                           class="form-control"
+                           id="exampleInputRepeatPassword"
+                           placeholder="Подтверждение пароля">
+                </label>
+            </div>
+            <button type="button" class="btn btn-primary w-100" id="process">Зарегистрироваться</button>
+        </form>
+        <div class="login-form-to-registration">
+            <div>Уже есть аккаунт?</div>
+            <a href="#">Войдите в систему</a>
+        </div>
+    </div>
+</section>

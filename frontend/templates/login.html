@@ -1,0 +1,46 @@
+<section class="login">
+    <div class="login-container">
+        <div class="login-main-logo">
+            <img src="./static/images/logo.png" alt="main-logo">
+        </div>
+        <h1 class="login-form-title">Вход</h1>
+        <div id="login-form-error-message">Ошибка авторизации</div>
+        <form id="form-user">
+            <div class="mb-3" id="email">
+                <label class="login-label">
+                    <div class="input-icon">
+                        <img src="./static/images/mail.png" alt="email">
+                    </div>
+                    <input type="email"
+                           name="email"
+                           class="form-control login-form-input"
+                           id="exampleInputEmail1"
+                           placeholder="Электронная почта">
+                </label>
+            </div>
+            <div class="mb-3" id="password">
+                <label class="login-label" for="exampleInputPassword1">
+                    <div class="input-icon">
+                        <img src="./static/images/lock.png" alt="lock">
+                    </div>
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           id="exampleInputPassword1"
+                           placeholder="Пароль">
+                </label>
+            </div>
+            <div class="login-form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Запомнить меня</label>
+            </div>
+            <button type="button" class="btn btn-primary w-100" id="process">Войти</button>
+        </form>
+        <div class="login-form-to-registration">
+            <div>Еще нет аккаунта?</div>
+            <a href="javascript:void(0)" id="toSignupBtn">Пройдите регистрацию</a>
+        </div>
+    </div>
+</section>
+
+

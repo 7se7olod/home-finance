@@ -1,0 +1,14 @@
+.operation-create-container {
+    padding: 100px 60px;
+    min-height: 100vh;
+}
+
+.operation-create-title {
+    color: #052C65;
+    margin-bottom: 40px;
+}
+
+.operation-create-form {
+    max-width: 397px;
+    margin-bottom: 40px;
+}

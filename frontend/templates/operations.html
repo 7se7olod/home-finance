@@ -1,0 +1,48 @@
+<div class="operations">
+    <div class="operations-container">
+        <h1 class="operations-title">Доходы и расходы</h1>
+        <div class="d-flex gap-3 operations-container-buttons">
+            <button class="btn btn-success" id="operations-create-btn">Создать доход</button>
+            <button class="btn btn-danger">Создать расход</button>
+        </div>
+        <ul class="d-flex gap-3 align-items-center nav-tabs list-unstyled border-0 operations-menu-filters">
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary operations-date-buttons active" data-toggle="tab">Сегодня</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary operations-date-buttons" data-toggle="tab">Неделя</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary operations-date-buttons" data-toggle="tab">Месяц</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary operations-date-buttons" data-toggle="tab">Год</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary operations-date-buttons" data-toggle="tab">Все</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary operations-date-buttons" data-toggle="tab">Интервал</a>
+            </li>
+            <div>
+                c <input type="date" id="date-input-from">
+                по <input type="date" id="date-input-to">
+            </div>
+        </ul>
+        <table class="table border-top operation-table">
+            <thead>
+            <tr class="operations-table-row-head">
+                <th scope="col">№ операции</th>
+                <th scope="col">Тип</th>
+                <th scope="col">Категория</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Комментарий</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="operations-table-body-content"></tbody>
+        </table>
+        <div id="operations-empty-text" style="text-align: center">Ничего не найдено</div>
+    </div>
+</div>

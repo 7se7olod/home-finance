@@ -1,0 +1,32 @@
+body {
+    padding: 0;
+    margin: 0 auto;
+    background-color: #F5F5F5;
+}
+
+#main {
+    display: flex;
+    max-width: 1440px;
+    background-color: #F5F5F5;
+}
+
+#content {
+    height: 100%;
+    /*margin-left: 219px;*/
+    /*position: fixed;*/
+}
+
+#text-modal-content {
+    padding: 0;
+    color: #290661;
+    font-size: 20px;
+}
+
+#btn-modal-content {
+    padding: 0;
+}
+
+.modal-content {
+    padding: 40px;
+}
+

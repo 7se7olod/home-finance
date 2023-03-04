@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title id="title">Вход</title>
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" id="styles" href="css/index.css">
+    <link rel="shortcut icon" href="data:,"/>
+</head>
+<body>
+
+<div id="main">
+    <div id="sidebar-content" class="position-fixed">
+        <div class="d-flex flex-column flex-shrink-0 min-vh-100 border" style="width: 280px;" id="sidebar">
+            <div class="sidebar-main-logo border-bottom">
+                <img src="./static/images/logo.png" alt="main-logo">
+            </div>
+            <ul class="nav nav-pills flex-column mb-auto mt-5 p-3">
+                <li class="nav-item">
+                    <a href="#/main" class="nav-link sidebar-text" id="sidebar-main-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#052C65"
+                             class="bi bi-house"
+                             viewBox="0 0 16 16">
+                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+                        </svg>
+                        Главная
+                    </a>
+                </li>
+                <li>
+                    <a href="#/operations" class="nav-link sidebar-text" id="sidebar-income-and-expenses-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#052C65"
+                             class="bi bi-cash-coin"
+                             viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
+                            <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
+                            <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
+                            <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
+                        </svg>
+                        Доходы & Расходы
+                    </a>
+                <li id="categories-collapse">
+                    <div class="accordion accordion-flush rounded-3 bg-transparent" id="accordionFlushExample">
+                        <div class="accordion-item rounded-3 bg-transparent">
+                            <h2 class="accordion-header rounded-3 bg-transparent" id="flush-headingOne">
+                                <button class="d-flex flex-row justify-content-between border-0 w-100 text-start rounded-top p-3 pt-2 pb-2"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne"
+                                        aria-controls="flush-collapseOne"
+                                        id="sidebar-categories-button">
+                                    Категории
+                                    <div>
+                                        <svg id="arrow" width="8" height="14" viewBox="0 0 8 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" fill="inherit" clip-rule="evenodd" d="M1.14512 13.3541C1.05108 13.2603 0.99823 13.1329 0.99823 13.0001C0.99823 12.8673 1.05108 12.7399 1.14512 12.6461L6.79212 7.00008L1.14512 1.35408C1.01865 1.22761 0.969259 1.04327 1.01555 0.87051C1.06184 0.697746 1.19679 0.562802 1.36955 0.51651C1.54231 0.470218 1.72665 0.51961 1.85312 0.646083L7.85312 6.64608C7.94717 6.73989 8.00002 6.86726 8.00002 7.00008C8.00002 7.13291 7.94717 7.26028 7.85312 7.35408L1.85312 13.3541C1.75932 13.4481 1.63195 13.501 1.49912 13.501C1.3663 13.501 1.23893 13.4481 1.14512 13.3541Z" fill="#052C65"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                                 data-bs-parent="#accordionFlushExample">
+                                <div class="d-flex flex-column">
+                                    <a class="nav-link btn btn-outline-secondary rounded-0 text-start border-0 pt-2"
+                                       id="sidebar-income-button"
+                                       aria-expanded="false"
+                                       href="#/categories/income">Доходы
+                                        <div></div>
+                                    </a>
+                                    <a class="nav-link btn btn-secondary rounded-0 text-start border-0 pt-2 rounded-bottom"
+                                       id="sidebar-expenses-button"
+                                       aria-expanded="false"
+                                       href="#/categories/expenses">Расходы
+                                        <div></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="border-bottom p-3">
+                Баланс:
+                <span class="text-primary" id="sidebar-user-balance">500</span><span class="text-primary">$</span>
+            </div>
+            <div class="accordion p-3" id="accordionExample">
+                <div class="accordion-item border-0" id="accordion-item">
+                    <div class="username-item">
+                        <div class="sidebar-user d-flex flex-row align-items-center gap-2 accordion-header"
+                             id="headingOne"
+                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                             aria-controls="collapseOne">
+                            <div class="sidebar-user-image rounded-circle d-flex align-items-center justify-content-center">
+                                <img src="./static/images/person.png" width="16px" height="16px" alt="person">
+                            </div>
+                            <span id="sidebar-username">Vsevolod Pushin</span>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body username-logout-btn">
+                            <button class="btn btn-outline-secondary" id="user-logout-btn" data-bs-toggle="modal"
+                                    data-bs-target="#userModal">Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="content"></div>
+</div>
+<div id="popup"></div>
+
+</body>
+</html>
