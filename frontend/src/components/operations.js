@@ -25,6 +25,8 @@ export class Operations {
     activateButtons() {
         const that = this;
         const menuItems = document.getElementsByClassName('operations-date-buttons');
+        const currentDate = DateFormatter.YYYY_MM_DD(new Date());
+
         const onClick = function (event) {
             event.preventDefault();
 
@@ -34,49 +36,50 @@ export class Operations {
 
             event.currentTarget.classList.add('active');
 
-            const currentDate = DateFormatter.YYYY_MM_DD(new Date());
-            if (event.currentTarget.innerText.toLowerCase() === 'сегодня') {
-                that.loadingOperations(currentDate, currentDate);
-            }
+            switch (event.currentTarget.innerText.toLowerCase()) {
+                case 'сегодня':
+                    that.loadingOperations(currentDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'неделя') {
-                that.loadingOperations(DateFormatter.weekDate, currentDate);
-            }
+                case 'неделя':
+                    that.loadingOperations(DateFormatter.weekDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'месяц') {
-                that.loadingOperations(DateFormatter.monthDate, currentDate);
-            }
+                case 'месяц':
+                    that.loadingOperations(DateFormatter.monthDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'год') {
-                that.loadingOperations(DateFormatter.yearDate, currentDate);
-            }
+                case 'год':
+                    that.loadingOperations(DateFormatter.yearDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'все') {
-                that.loadingOperations(DateFormatter.allDate, currentDate);
-            }
+                case 'все':
+                    that.loadingOperations(DateFormatter.allDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'интервал') {
-                that.operationTableBody.innerHTML = '';
+                case 'интервал':
+                    that.operationTableBody.innerHTML = '';
 
-                that.dateInputFromElement.onchange = function () {
-                    const fromDateValue = that.dateInputFromElement.value;
-                    const toDateValue = that.dateInputToElement.value;
-                    if (fromDateValue && toDateValue) {
-                        that.loadingOperations(fromDateValue, toDateValue);
-                    } else {
-                        that.operationTableBody.innerHTML = '';
+                    that.dateInputFromElement.onchange = function () {
+                        const fromDateValue = that.dateInputFromElement.value;
+                        const toDateValue = that.dateInputToElement.value;
+                        if (fromDateValue && toDateValue) {
+                            that.loadingOperations(fromDateValue, toDateValue);
+                        } else {
+                            that.operationTableBody.innerHTML = '';
+                        }
                     }
-                }
 
-                that.dateInputToElement.onchange = function () {
-                    const fromDateValue = that.dateInputFromElement.value;
-                    const toDateValue = that.dateInputToElement.value;
-                    if (fromDateValue && toDateValue) {
-                        that.loadingOperations(fromDateValue, toDateValue);
-                    } else {
-                        that.operationTableBody.innerHTML = '';
+                    that.dateInputToElement.onchange = function () {
+                        const fromDateValue = that.dateInputFromElement.value;
+                        const toDateValue = that.dateInputToElement.value;
+                        if (fromDateValue && toDateValue) {
+                            that.loadingOperations(fromDateValue, toDateValue);
+                        } else {
+                            that.operationTableBody.innerHTML = '';
+                        }
                     }
-                }
+                    break;
             }
         };
 
@@ -110,7 +113,7 @@ export class Operations {
             removeBtn.innerHTML = SvgBtns.removeBtn;
             changeBtn.innerHTML = SvgBtns.editBtn;
             removeBtn.setAttribute('data-bs-toggle', "modal");
-            removeBtn.setAttribute("data-bs-target","#userModal");
+            removeBtn.setAttribute("data-bs-target", "#userModal");
 
             changeBtn.onclick = function () {
                 localStorage.setItem('editOperation', JSON.stringify(operation.id));
@@ -131,7 +134,7 @@ export class Operations {
 
                     currentBalance.innerText = updatedBalance;
                     await CustomHttp.request(config.host + '/operations/' + operation.id, 'DELETE');
-                    await CustomHttp.request(config.host + '/balance', 'PUT', {newBalance: updatedBalance });
+                    await CustomHttp.request(config.host + '/balance', 'PUT', {newBalance: updatedBalance});
                     that.loadingOperations(dateFrom, dateTo);
                 }
             }

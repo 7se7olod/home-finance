@@ -26,6 +26,7 @@ class ValidationUtils {
     static refreshTokenValidation(data) {
         const schema = Joi.object({
             refreshToken: Joi.string().required(),
+            rememberMe: Joi.boolean().default(false),
         });
         return schema.validate(data, { abortEarly: false});
     }

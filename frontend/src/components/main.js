@@ -100,6 +100,8 @@ export class Main {
     activateButtons() {
         const that = this;
         const menuItems = document.getElementsByClassName('operations-date-buttons');
+        const currentDate = DateFormatter.YYYY_MM_DD(new Date());
+
         const onClick = function (event) {
             event.preventDefault();
 
@@ -109,43 +111,42 @@ export class Main {
 
             event.currentTarget.classList.add('active');
 
-            const currentDate = DateFormatter.YYYY_MM_DD(new Date());
-            if (event.currentTarget.innerText.toLowerCase() === 'сегодня') {
-                that.loadingOperations(currentDate, currentDate);
-            }
+            switch (event.currentTarget.innerText.toLowerCase()) {
+                case 'сегодня':
+                    that.loadingOperations(currentDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'неделя') {
-                that.loadingOperations(DateFormatter.weekDate, currentDate);
-            }
+                case 'неделя':
+                    that.loadingOperations(DateFormatter.weekDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'месяц') {
-                that.loadingOperations(DateFormatter.monthDate, currentDate);
-            }
+                case 'месяц':
+                    that.loadingOperations(DateFormatter.monthDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'год') {
-                that.loadingOperations(DateFormatter.yearDate, currentDate);
-            }
+                case 'год':
+                    that.loadingOperations(DateFormatter.yearDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'все') {
-                that.loadingOperations(DateFormatter.allDate, currentDate);
-            }
+                case 'все':
+                    that.loadingOperations(DateFormatter.allDate, currentDate);
+                    break;
 
-            if (event.currentTarget.innerText.toLowerCase() === 'интервал') {
-                that.dateInputFromElement.onchange = function () {
+                case 'интервал':
                     const fromDateValue = that.dateInputFromElement.value;
                     const toDateValue = that.dateInputToElement.value;
-                    if (fromDateValue && toDateValue) {
-                        that.loadingOperations(fromDateValue, toDateValue);
+                    that.dateInputFromElement.onchange = function () {
+                        if (fromDateValue && toDateValue) {
+                            that.loadingOperations(fromDateValue, toDateValue);
+                        }
                     }
-                }
 
-                that.dateInputToElement.onchange = function () {
-                    const fromDateValue = that.dateInputFromElement.value;
-                    const toDateValue = that.dateInputToElement.value;
-                    if (fromDateValue && toDateValue) {
-                        that.loadingOperations(fromDateValue, toDateValue);
+                    that.dateInputToElement.onchange = function () {
+                        if (fromDateValue && toDateValue) {
+                            that.loadingOperations(fromDateValue, toDateValue);
+                        }
                     }
-                }
+                    break;
             }
         };
 
@@ -156,34 +157,81 @@ export class Main {
 
     async loadingOperations(dateFrom, dateTo) {
         const result = await CustomHttp.request(config.host + `/operations?period=interval&dateFrom=${dateFrom}&dateTo=${dateTo}`);
-
         const emptyExpenseText = document.getElementById('main-page-empty-text-expense');
         const emptyIncomeText = document.getElementById('main-page-empty-text-income');
 
-        const incomeOperationAmount = []
-        const incomeOperationCategory = []
-        const expenseOperationAmount = []
-        const expenseOperationCategory = []
+        const incomeCategoriesMap = new Map();
+        const expenseCategoriesMap = new Map();
+        const incomeCategories = [];
+        const incomeAmounts = [];
+        const expenseCategories = [];
+        const expenseAmounts = [];
+
         result.forEach(operation => {
             if (operation.type === 'income') {
-                incomeOperationCategory.push(operation.category);
-                incomeOperationAmount.push(operation.amount);
+                const category = operation.category;
+                const amount = operation.amount;
+                if (incomeCategoriesMap.has(category)) {
+                    incomeCategoriesMap.set(category, incomeCategoriesMap.get(category) + amount);
+                } else {
+                    incomeCategoriesMap.set(category, amount);
+                }
             }
 
             if (operation.type === 'expense') {
-                expenseOperationCategory.push(operation.category);
-                expenseOperationAmount.push(operation.amount);
+                const category = operation.category;
+                const amount = operation.amount;
+                if (expenseCategoriesMap.has(category)) {
+                    expenseCategoriesMap.set(category, expenseCategoriesMap.get(category) + amount);
+                } else {
+                    expenseCategoriesMap.set(category, amount);
+                }
             }
         })
 
-        emptyIncomeText.style.display = (incomeOperationCategory.length === 0) ? 'block' : 'none';
-        emptyExpenseText.style.display = (expenseOperationCategory.length === 0) ? 'block' : 'none';
+        incomeCategoriesMap.forEach((value, key) => {
+            incomeCategories.push(key);
+            incomeAmounts.push(value);
+        });
 
-        this.incomeChart.data.datasets[0].data = incomeOperationAmount;
-        this.incomeChart.data.labels = incomeOperationCategory;
+        expenseCategoriesMap.forEach((value, key) => {
+            expenseCategories.push(key);
+            expenseAmounts.push(value);
+        });
+
+        emptyIncomeText.style.display = (incomeCategories.length === 0) ? 'block' : 'none';
+        emptyExpenseText.style.display = (expenseCategories.length === 0) ? 'block' : 'none';
+
+        this.incomeChart.data.datasets[0].data = incomeAmounts;
+        this.incomeChart.data.labels = incomeCategories;
         this.incomeChart.update();
-        this.expenseChart.data.datasets[0].data = expenseOperationAmount;
-        this.expenseChart.data.labels = expenseOperationCategory;
+        this.expenseChart.data.datasets[0].data = expenseAmounts;
+        this.expenseChart.data.labels = expenseCategories;
         this.expenseChart.update();
+
+
+        // const incomeOperation = {categories: [], amounts: []};
+        // const expenseOperation = {categories: [], amounts: []};
+        // result.forEach(operation => {
+        //     if (operation.type === 'income') {
+        //         incomeOperation.categories.push(operation.category);
+        //         incomeOperation.amounts.push(operation.amount)
+        //     }
+        //
+        //     if (operation.type === 'expense') {
+        //         expenseOperation.categories.push(operation.category);
+        //         expenseOperation.amounts.push(operation.amount);
+        //     }
+        // })
+        //
+        // emptyIncomeText.style.display = (incomeOperation.categories.length === 0) ? 'block' : 'none';
+        // emptyExpenseText.style.display = (expenseOperation.categories.length === 0) ? 'block' : 'none';
+        //
+        // this.incomeChart.data.datasets[0].data = incomeOperation.amounts;
+        // this.incomeChart.data.labels = incomeOperation.categories;
+        // this.incomeChart.update();
+        // this.expenseChart.data.datasets[0].data = expenseOperation.amounts;
+        // this.expenseChart.data.labels = expenseOperation.categories;
+        // this.expenseChart.update();
     }
 }

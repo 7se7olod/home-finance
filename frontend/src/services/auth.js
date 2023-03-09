@@ -8,6 +8,7 @@ export class Auth {
 
     static async processUnautharizedResponse() {
         const refreshToken = localStorage.getItem(this.refreshTokenKey);
+        const rememberMeFlag = this.getUserInfo().rememberMe;
         if (refreshToken) {
             const response = await fetch(config.host + '/refresh', {
                 method: 'POST',
@@ -15,14 +16,13 @@ export class Auth {
                     'Content-type': 'application/json',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({refreshToken: refreshToken})
+                body: JSON.stringify({refreshToken: refreshToken, rememberMe: rememberMeFlag})
             });
 
             if (response && response.status === 200) {
                 const result = await response.json();
                 if (result && !result.error) {
-
-                    this.setTokens(result.accessToken, result.refreshToken);
+                    this.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                     return true;
                 }
             }

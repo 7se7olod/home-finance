@@ -28,8 +28,6 @@ export class CreateCategory {
                         title: title
                     })
                     location.href = '#/categories/income';
-                } else {
-                    alert('Пустая строка');
                 }
             }
         }
@@ -48,8 +46,6 @@ export class CreateCategory {
                         title: title
                     })
                     location.href = '#/categories/expenses';
-                } else {
-                    alert('Пустая строка');
                 }
             }
         }

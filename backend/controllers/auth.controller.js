@@ -119,7 +119,7 @@ class AuthController {
         try {
             const {tokenDetails} = await TokenUtils.verifyRefreshToken(req.body.refreshToken);
             const user = UserModel.findOne({email: tokenDetails.email});
-            const {accessToken, refreshToken} = await TokenUtils.generateTokens(user);
+            const {accessToken, refreshToken} = await TokenUtils.generateTokens(user, req.body.rememberMe);
 
             res.status(200).json({
                 tokens: {

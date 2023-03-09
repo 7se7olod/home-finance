@@ -6,7 +6,6 @@ export class Form {
 
     constructor(page) {
         this.rememberMeElement = null;
-        this.rememberMe = false;
         this.processElement = null;
         this.page = page;
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
@@ -24,7 +23,7 @@ export class Form {
                 name: 'password',
                 id: 'exampleInputPassword1',
                 element: null,
-                regex: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d).*$/,
+                regex: /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])[a-zA-Z\d]{8,}$/,
                 valid: false,
             },
         ];
@@ -35,14 +34,14 @@ export class Form {
                     name: 'name',
                     id: 'exampleInputUsername',
                     element: null,
-                    regex: /^[a-zA-Zа-яА-Я]+ [a-zA-Zа-яА-Я]+ [a-zA-Zа-яА-Я]+$/,
+                    regex: /^([A-ZА-ЯЁ][a-zа-яё\-]*\s?){1,3}$/,
                     valid: false,
                 },
                 {
                     name: 'repeat-password',
                     id: 'exampleInputRepeatPassword',
                     element: null,
-                    regex: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d).*$/,
+                    regex: /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])[a-zA-Z\d]{8,}$/,
                     valid: false,
                 })
         }
@@ -53,10 +52,6 @@ export class Form {
         }
 
         if (this.page === 'login') {
-            document.getElementById('toSignupBtn').onclick = function () {
-                location.href = '#/signup';
-            }
-
             this.rememberMeElement = document.getElementById('exampleCheck1');
         }
 
@@ -112,15 +107,11 @@ export class Form {
                             if (result.error || !result.user) {
                                 throw new Error(result.message);
                             }
-                            console.log('Пользователь ' + name + ' зарегистрирован!');
-                            alert('Пользователь ' + name + ' зарегистрирован!');
                             location.href = "#/";
                         }
                     } catch (error) {
                         console.log(error);
                     }
-                } else {
-                    alert('Пароли не совпадают!');
                 }
             }
 
@@ -138,7 +129,6 @@ export class Form {
                             document.getElementById('login-form-error-message').style.display = 'block';
                             throw new Error(result.message);
                         }
-                        console.log(result);
 
                         Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                         Auth.setUserInfo({
@@ -148,10 +138,8 @@ export class Form {
                             rememberMe: rememberMe
                         })
                         location.href = "#/categories/income";
-                        alert('Пользователь ' + result.user.name + ' вошел в систему!');
                         document.getElementById('sidebar-username').innerText = result.user.name + ' ' + result.user.lastName;
                     } else {
-                        alert("Проверьте данные авторизации!");
                         document.getElementById('login-form-error-message').style.display = 'block';
                     }
                 } catch (error) {

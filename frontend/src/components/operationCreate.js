@@ -48,20 +48,29 @@ export class OperationCreate {
 
         this.createButtonElement.onclick = async function () {
             const createSelectCategoryElement = document.getElementById('operation-create-select-category');
-            const body = {
-                type: that.createSelectTypeElement.value,
-                amount: Number(that.amountInputElement.value.replace('$', '')),
-                date: that.dateInputElement.value,
-                comment: that.commentInputElement.value,
-                category_id: Number(createSelectCategoryElement.value)
+            const comment = that.commentInputElement.value;
+            const date = that.dateInputElement.value;
+            const type = that.createSelectTypeElement.value;
+            const amount = Number(that.amountInputElement.value.replace('$', ''));
+            const categoryID = Number(createSelectCategoryElement.value);
+
+            if (comment && date && type && amount && categoryID) {
+                const body = {
+                    type: type,
+                    amount: amount,
+                    date: date,
+                    comment: comment,
+                    category_id: categoryID
+                }
+
+                if (that.operationType === 'edit') {
+                    await CustomHttp.request(config.host + '/operations/' + that.operationId, 'PUT', body);
+                } else {
+                    await CustomHttp.request(config.host + '/operations', 'POST', body);
+                }
+                location.href = '#/operations';
+                localStorage.removeItem('editOperation');
             }
-            if (that.operationType === 'edit') {
-                await CustomHttp.request(config.host + '/operations/' + that.operationId, 'PUT', body);
-            } else {
-                await CustomHttp.request(config.host + '/operations', 'POST', body);
-            }
-            location.href = '#/operations';
-            localStorage.removeItem('editOperation');
         }
     }
 

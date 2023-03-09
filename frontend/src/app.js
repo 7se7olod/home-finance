@@ -10,7 +10,7 @@ class App {
     }
 
     handleRouteChanging() {
-        this.router.openRote();
+        this.router.openRoute();
     }
 }
 

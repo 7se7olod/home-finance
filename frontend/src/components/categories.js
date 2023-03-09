@@ -1,6 +1,7 @@
 import {CustomHttp} from "../services/custom-http.js";
 import config from "../../config/config.js";
 import {Popup} from "../utils/popup.js";
+import {DateFormatter} from "../utils/dateFormatter";
 
 export class Categories {
     constructor(typeCategory) {
@@ -48,13 +49,26 @@ export class Categories {
                 }
             }
 
-            document.getElementsByClassName('card-remove-btn')[i].onclick = function () {
+            document.getElementsByClassName('card-remove-btn')[i].onclick = async function () {
+                const currentDate = DateFormatter.YYYY_MM_DD(new Date());
+                const operations = await CustomHttp.request(config.host + `/operations?period=interval&dateFrom=${DateFormatter.allDate}&dateTo=${currentDate}`);
+                const currentBalance = document.getElementById('sidebar-user-balance');
+                let updatedBalance;
+
                 if (that.type === 'income') {
                     Popup.setTextPopup(Popup.incomeRemoveText);
                     Popup.setButtons(Popup.yesRemoveBtn, Popup.notRemoveBtn);
                     document.getElementById('popup-remove-category-btn').onclick = async function () {
                         await CustomHttp.request(config.host + '/categories/income/' + that.cards[i].id, 'DELETE');
-                        // that.cards.filter(function (card) { return card !== that.cards[i] });
+
+                        for (let j = 0; j < operations.length; j++) {
+                            if (operations[j].category === that.cards[i].title) {
+                                updatedBalance = Number(currentBalance.innerText) - operations[j].amount;
+                                await CustomHttp.request(config.host + '/operations/' + operations[j].id, 'DELETE');
+                                await CustomHttp.request(config.host + '/balance', 'PUT', {newBalance: updatedBalance});
+                                currentBalance.innerText = updatedBalance;
+                            }
+                        }
                         location.href = '#/categories/income';
                     }
                 }
@@ -64,7 +78,15 @@ export class Categories {
                     Popup.setButtons(Popup.yesRemoveBtn, Popup.notRemoveBtn);
                     document.getElementById('popup-remove-category-btn').onclick = async function () {
                         await CustomHttp.request(config.host + '/categories/expense/' + that.cards[i].id, 'DELETE');
-                        // that.cards.filter(function (card) { return card !== that.cards[i] });
+
+                        for (let j = 0; j < operations.length; j++) {
+                            if (operations[j].category === that.cards[i].title) {
+                                updatedBalance = Number(currentBalance.innerText) + operations[j].amount;
+                                await CustomHttp.request(config.host + '/operations/' + operations[j].id, 'DELETE');
+                                await CustomHttp.request(config.host + '/balance', 'PUT', {newBalance: updatedBalance});
+                                currentBalance.innerText = updatedBalance;
+                            }
+                        }
                         location.href = '#/categories/expenses';
                     }
                 }

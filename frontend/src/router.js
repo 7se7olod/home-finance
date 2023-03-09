@@ -19,7 +19,7 @@ export class Router {
         this.mainElement = document.getElementById('main');
         this.sidebarContentElement = document.getElementById('sidebar-content');
 
-        this.rotes = [
+        this.гoutes = [
             {
                 route: '#/',
                 title: 'Вход',
@@ -131,7 +131,7 @@ export class Router {
         ];
     }
 
-    async openRote() {
+    async openRoute() {
         const urlRoute = window.location.hash.split('?')[0];
         if (urlRoute === '#/logout') {
             await Auth.logout();
@@ -140,7 +140,7 @@ export class Router {
         }
 
 
-        const newRoute = this.rotes.find(item => {
+        const newRoute = this.гoutes.find(item => {
             return item.route === urlRoute;
         });
 
@@ -234,17 +234,6 @@ export class Router {
 
         setActiveLink()
         window.addEventListener('hashchange', setActiveLink);
-
-
-        // const userInfo = Auth.getUserInfo();
-        // const accessToken = localStorage.getItem(Auth.accessTokenKey);
-        // if (userInfo && accessToken) {
-        //     this.profileElement.style.display = 'flex';
-        //     this.profileNameElement.innerText = userInfo.fullName;
-        // } else {
-        //     this.profileElement.style.display = 'none';
-        // }
-
         newRoute.load();
     }
 }
