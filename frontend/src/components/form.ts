@@ -1,16 +1,19 @@
-import {CustomHttp} from "../services/custom-http.js";
-import {Auth} from "../services/auth.js";
-import config from "../../config/config.js";
+import {CustomHttp} from "../services/custom-http";
+import {Auth} from "../services/auth";
+import config from "../../config/config";
+import {FieldType} from "../type/field.type";
 
 export class Form {
+    readonly page: string;
+    private rememberMeElement: HTMLInputElement | null = null;
+    readonly processElement: HTMLElement | null = null;
+    readonly accessToken: string | null = localStorage.getItem(Auth.accessTokenKey);
+    readonly fields: FieldType[];
+    private loginFormErrorMsgElement = document.getElementById('login-form-error-message');
 
-    constructor(page) {
-        this.rememberMeElement = null;
-        this.processElement = null;
+    constructor(page: string) {
         this.page = page;
-        const accessToken = localStorage.getItem(Auth.accessTokenKey);
-        const that = this;
-
+        const that: Form = this;
         this.fields = [
             {
                 name: 'email',
@@ -46,13 +49,13 @@ export class Form {
                 })
         }
 
-        if (accessToken) {
-            location.href = '#/categories/income';
-            return;
-        }
+        // if (accessToken) {
+        //     location.href = '#/categories/income';
+        //     return;
+        // }
 
         if (this.page === 'login') {
-            this.rememberMeElement = document.getElementById('exampleCheck1');
+            this.rememberMeElement = (document.getElementById('exampleCheck1') as HTMLInputElement);
         }
 
         this.fields.forEach(item => {
@@ -63,12 +66,13 @@ export class Form {
         })
 
         this.processElement = document.getElementById('process');
-        this.processElement.onclick = function () {
+        if (!this.processElement) return;
+        (this.processElement as HTMLButtonElement).onclick = function () {
             that.processForm();
         }
     }
 
-    validateField(field, element) {
+    private validateField(field: FieldType, element: any): void {
         if (!element.value || !element.value.match(field.regex)) {
             element.style.borderColor = 'red';
             field.valid = false;
@@ -79,19 +83,26 @@ export class Form {
         this.validateForm();
     }
 
-    validateForm() {
+    private validateForm(): boolean {
         return this.fields.every(item => item.valid);
     }
 
-    async processForm() {
+    private async processForm(): Promise<void> {
         if (this.validateForm()) {
-            const email = this.fields.find(item => item.name === 'email').element.value;
-            const password = this.fields.find(item => item.name === 'password').element.value;
+            const email: string | null = this.fields.find(item => item.name === 'email')!.element.value;
+            const password: string | null = this.fields.find(item => item.name === 'password')!.element.value;
+            if (!email) return;
+            if (!password) return;
 
             if (this.page === 'signup') {
-                const repeatPassword = this.fields.find(item => item.name === 'repeat-password').element.value;
-                const name = this.fields.find(item => item.name === 'name').element.value.split(' ')[1];
-                const lastName = this.fields.find(item => item.name === 'name').element.value.split(' ')[0];
+                if (!this.fields) return;
+                const repeatPassword: string | null = this.fields.find(item => item.name === 'repeat-password')!.element!.value;
+                const name: string | null = this.fields.find(item => item.name === 'name')!.element.value.split(' ')[1];
+                const lastName: string | null = this.fields.find(item => item.name === 'name')!.element.value.split(' ')[0];
+
+                if (repeatPassword == undefined) return;
+                if (name == undefined) return;
+                if (lastName == undefined) return;
 
                 if (password === repeatPassword) {
                     try {
@@ -117,16 +128,18 @@ export class Form {
 
             if (this.page === 'login') {
                 try {
-                    const rememberMe = this.rememberMeElement.checked;
-                    const result = await CustomHttp.request(config.host + '/login', 'POST', {
+                    // if (!this.rememberMeElement.checked) return;
+                    // const rememberMe: boolean = this.rememberMeElement.checked;
+                    // if (!rememberMe) return;
+                    const result: any = await CustomHttp.request(config.host + '/login', 'POST', {
                         email: email,
                         password: password,
-                        rememberMe: rememberMe,
+                        rememberMe: this.rememberMeElement?.checked,
                     })
 
                     if (result) {
                         if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
-                            document.getElementById('login-form-error-message').style.display = 'block';
+                            document.getElementById('login-form-error-message')!.style.display = 'block';
                             throw new Error(result.message);
                         }
 
@@ -135,15 +148,22 @@ export class Form {
                             name: result.user.name,
                             userId: result.user.id,
                             lastName: result.user.lastName,
-                            rememberMe: rememberMe
+                            rememberMe: this.rememberMeElement?.checked ? true : false,
                         })
                         location.href = "#/categories/income";
-                        document.getElementById('sidebar-username').innerText = result.user.name + ' ' + result.user.lastName;
+                        const sidebarUsernameElement = document.getElementById('sidebar-username');
+                        if (sidebarUsernameElement) {
+                            sidebarUsernameElement.innerText = result.user.name + ' ' + result.user.lastName;
+                        }
                     } else {
-                        document.getElementById('login-form-error-message').style.display = 'block';
+                        if (this.loginFormErrorMsgElement) {
+                            this.loginFormErrorMsgElement.style.display = 'block'
+                        }
                     }
                 } catch (error) {
-                    document.getElementById('login-form-error-message').style.display = 'block';
+                    if (this.loginFormErrorMsgElement) {
+                        this.loginFormErrorMsgElement.style.display = 'block'
+                    }
                     return console.log(error);
                 }
             }

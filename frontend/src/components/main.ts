@@ -2,14 +2,20 @@ import Chart from 'chart.js/auto'
 import {DateFormatter} from "../utils/dateFormatter";
 import {CustomHttp} from "../services/custom-http";
 import config from "../../config/config";
+import {OperationType} from "../type/operation.type";
 
 export class Main {
+    private dateInputFromElement: HTMLElement | null = document.getElementById('date-input-from');
+    private dateInputToElement: HTMLElement | null = document.getElementById('date-input-to');
+    private pieExpenseElement: HTMLElement | null = document.getElementById('pie-expense');
+    private pieIncomeElement: HTMLElement | null = document.getElementById('pie-income');
+    private incomeChart: any;
+    private expenseChart: any;
     constructor() {
-        this.dateInputFromElement = document.getElementById('date-input-from');
-        this.dateInputToElement = document.getElementById('date-input-to');
-
+        if (!this.pieExpenseElement) return;
+        if (!this.pieIncomeElement) return;
         this.incomeChart = new Chart(
-            document.getElementById('pie-income'),
+            (this.pieIncomeElement as HTMLCanvasElement),
             {
                 type: 'pie',
                 data: {
@@ -49,7 +55,7 @@ export class Main {
         );
 
         this.expenseChart = new Chart(
-            document.getElementById('pie-expense'),
+            (this.pieExpenseElement as HTMLCanvasElement),
             {
                 type: 'pie',
                 data: {
@@ -92,7 +98,8 @@ export class Main {
     }
 
     async init() {
-        const currentDate = DateFormatter.YYYY_MM_DD(new Date());
+        const currentDate: DateFormatter = DateFormatter.YYYY_MM_DD(new Date());
+        if (!currentDate) return;
         this.loadingOperations(currentDate, currentDate);
         this.activateButtons();
     }
@@ -102,16 +109,17 @@ export class Main {
         const menuItems = document.getElementsByClassName('operations-date-buttons');
         const currentDate = DateFormatter.YYYY_MM_DD(new Date());
 
-        const onClick = function (event) {
+        const onClick = function (event: Event) {
             event.preventDefault();
 
             for (let i = 0; i < menuItems.length; i++) {
                 menuItems[i].classList.remove('active');
             }
 
-            event.currentTarget.classList.add('active');
+            if (!event.currentTarget) return;
+            (event.currentTarget as HTMLButtonElement).classList.add('active');
 
-            switch (event.currentTarget.innerText.toLowerCase()) {
+            switch ((event.currentTarget as HTMLButtonElement).innerText.toLowerCase()) {
                 case 'сегодня':
                     that.loadingOperations(currentDate, currentDate);
                     break;
@@ -133,14 +141,16 @@ export class Main {
                     break;
 
                 case 'интервал':
-                    const fromDateValue = that.dateInputFromElement.value;
-                    const toDateValue = that.dateInputToElement.value;
+                    const fromDateValue: string = (that.dateInputFromElement as HTMLInputElement).value;
+                    const toDateValue: string = (that.dateInputToElement as HTMLInputElement).value;
+                    if (!that.dateInputFromElement) return;
                     that.dateInputFromElement.onchange = function () {
                         if (fromDateValue && toDateValue) {
                             that.loadingOperations(fromDateValue, toDateValue);
                         }
                     }
 
+                    if (!that.dateInputToElement) return;
                     that.dateInputToElement.onchange = function () {
                         if (fromDateValue && toDateValue) {
                             that.loadingOperations(fromDateValue, toDateValue);
@@ -155,22 +165,23 @@ export class Main {
         }
     }
 
-    async loadingOperations(dateFrom, dateTo) {
-        const result = await CustomHttp.request(config.host + `/operations?period=interval&dateFrom=${dateFrom}&dateTo=${dateTo}`);
-        const emptyExpenseText = document.getElementById('main-page-empty-text-expense');
-        const emptyIncomeText = document.getElementById('main-page-empty-text-income');
+    private async loadingOperations(dateFrom: DateFormatter, dateTo: DateFormatter): Promise<void> {
+        const result: OperationType[] = await CustomHttp.request(config.host + `/operations?period=interval&dateFrom=${dateFrom}&dateTo=${dateTo}`);
+        const emptyExpenseText: HTMLElement | null = document.getElementById('main-page-empty-text-expense');
+        const emptyIncomeText: HTMLElement | null = document.getElementById('main-page-empty-text-income');
 
-        const incomeCategoriesMap = new Map();
+        const incomeCategoriesMap: Map<any, any> = new Map();
         const expenseCategoriesMap = new Map();
-        const incomeCategories = [];
-        const incomeAmounts = [];
-        const expenseCategories = [];
-        const expenseAmounts = [];
+        const incomeCategories: any[] = [];
+        const incomeAmounts: any[] = [];
+        const expenseCategories: any[] = [];
+        const expenseAmounts: any[] = [];
 
-        result.forEach(operation => {
+        if (!result) return;
+        result.forEach((operation: OperationType) => {
             if (operation.type === 'income') {
-                const category = operation.category;
-                const amount = operation.amount;
+                const category: string = operation.category;
+                const amount: number = operation.amount;
                 if (incomeCategoriesMap.has(category)) {
                     incomeCategoriesMap.set(category, incomeCategoriesMap.get(category) + amount);
                 } else {
@@ -179,8 +190,8 @@ export class Main {
             }
 
             if (operation.type === 'expense') {
-                const category = operation.category;
-                const amount = operation.amount;
+                const category: string = operation.category;
+                const amount: number = operation.amount;
                 if (expenseCategoriesMap.has(category)) {
                     expenseCategoriesMap.set(category, expenseCategoriesMap.get(category) + amount);
                 } else {
@@ -199,6 +210,8 @@ export class Main {
             expenseAmounts.push(value);
         });
 
+        if (!emptyExpenseText) return;
+        if (!emptyIncomeText) return;
         emptyIncomeText.style.display = (incomeCategories.length === 0) ? 'block' : 'none';
         emptyExpenseText.style.display = (expenseCategories.length === 0) ? 'block' : 'none';
 
@@ -208,30 +221,7 @@ export class Main {
         this.expenseChart.data.datasets[0].data = expenseAmounts;
         this.expenseChart.data.labels = expenseCategories;
         this.expenseChart.update();
-
-
-        // const incomeOperation = {categories: [], amounts: []};
-        // const expenseOperation = {categories: [], amounts: []};
-        // result.forEach(operation => {
-        //     if (operation.type === 'income') {
-        //         incomeOperation.categories.push(operation.category);
-        //         incomeOperation.amounts.push(operation.amount)
-        //     }
-        //
-        //     if (operation.type === 'expense') {
-        //         expenseOperation.categories.push(operation.category);
-        //         expenseOperation.amounts.push(operation.amount);
-        //     }
-        // })
-        //
-        // emptyIncomeText.style.display = (incomeOperation.categories.length === 0) ? 'block' : 'none';
-        // emptyExpenseText.style.display = (expenseOperation.categories.length === 0) ? 'block' : 'none';
-        //
-        // this.incomeChart.data.datasets[0].data = incomeOperation.amounts;
-        // this.incomeChart.data.labels = incomeOperation.categories;
-        // this.incomeChart.update();
-        // this.expenseChart.data.datasets[0].data = expenseOperation.amounts;
-        // this.expenseChart.data.labels = expenseOperation.categories;
-        // this.expenseChart.update();
     }
 }
+
+
